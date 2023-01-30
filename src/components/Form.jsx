@@ -2,28 +2,35 @@ import React from 'react';
 
 export default function Form({ title }) {
 
-    function handleForm(e) {
+    async function handleForm(e) {
         e.preventDefault();
         const data = new FormData(e.target);
         const newUser = {
             fullName: data.get("fullName"),
             userName: data.get("userName"),
             email: data.get("email"),
-            profilePic: data.get("profilePic"),
+            profilePic: data.target(),
             password: data.get("password")
         };
 
-        fetch('http://localhost:3030/api/users', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json', //default mime type and subtype
-                'Content-Type': 'application/json; charset=utf-8', //mime character encoder
-            },
-            body: JSON.stringify(newUser),
-        })
-            .then((res) => console.log(res))
-    };
+        console.log(newUser.profilePic);
 
+        await fetch("http://localhost:3030/api/users",
+            {
+                method: 'POST',
+                headers: {
+                    "Accept": 'application/json', //default mime type and subtype
+                    'Content-Type': 'application/json; charset=utf-8', //mime character encoder
+                },
+                body: JSON.stringify(newUser),
+            })
+            .then((res) => res.status.json())
+            .then((data) => console.log())
+            .catch((err) => console.log(err))
+
+            // console.log(newUser.profilePic.name);
+    };
+    
     return (
         <section>
             <h2>{title}</h2>
